@@ -8,6 +8,7 @@ class twenty_forty_eight:
         self.ID = ID
         self.turnNum = 0
         self.board = np.array([[0 for i in range(4)] for x in range(4)], int)
+        self.score = 0
         
     def __repr__(self):
         print_str = f'Game = {self.ID}\nTurns = {self.turnNum}\n'
