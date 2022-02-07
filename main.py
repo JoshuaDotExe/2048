@@ -1,4 +1,5 @@
 import numpy as np
+from tkinter import *
 from pynput import keyboard
 from random import randint
 from time import sleep
@@ -34,7 +35,8 @@ class twenty_forty_eight:
         # Up = 0, Left = 3, Down = 2, Right = 1
         self.board = np.rot90(self.board, direction)
     
-    def move(self): # Moves elements up
+    def move(self, i): # Moves elements up
+        self.arr_transpose(abs(i))
         rowNum = 1
         colNum = 0
         num_of_moves = 0
@@ -59,7 +61,13 @@ class twenty_forty_eight:
                     # Everything else is unmoved 
                 colNum += 1
             rowNum += 1
-        return num_of_moves
+        self.arr_transpose(i)
+        if num_of_moves > 0:
+            self.rand_insert()
+            self.turnNum += 1
+        elif num_of_moves == 0:
+            print('BAD MOVE, NO NEW NUM ADDED')      
+        return
     
     # Changes element in array
     def item_mod(self, item, rowNum, colNum, desired_row):
@@ -92,58 +100,55 @@ class twenty_forty_eight:
             randCoords = avail_space_dict[randNum]
             self.board[randCoords[0]][randCoords[1]] = 2    # num inserted
     
-    def turn(self, num_of_moves):
-        if num_of_moves > 0:
-            self.rand_insert()
-        elif num_of_moves == 0:
-            print('BAD MOVE, NO NEW NUM ADDED')
-            return
-        self.turnNum += 1
+    def avail_moves_check(self):
+        for row in range(4):
+            for col in range(3):
+                check_num = self.board[row][col]
+                if self.board[row][col+1] == check_num:
+                    return True
+        for row in range(3):
+            for col in range(4):
+                check_num = self.board[row][col]
+                if self.board[row+1][col] == check_num:
+                    return True
+        return False
+           
+    def terminal_turn(self):
         print(self)
-        
-        if len(self.empty_spaces()) == 0:
-            possible_moves = 0
-            # Fast way of making a copy of a 2D array without references
-            arr_copy = np.array([row[:] for row in self.board])
-            # Tests all moves for a valid move
-            for x in range(4):
-                self.arr_transpose(x)
-                possible_moves += self.move()
-                if possible_moves > 0:
-                    self.board = np.array([row[:] for row in arr_copy])
-                    break
-            if possible_moves == 0:
-                print('No possible moves remaining')
-                gameOver = ('G','A','M','E','O','V','E','R')
-                for x in gameOver:
-                    print(x)
-                    sleep(0.2)
-                exit(None)
+        for row in self.board:
+            for col in row:
+                if col == 0:
+                    return
+
+        if self.avail_moves_check() == False:
+            print('No possible moves remaining')
+            gameOver = ('G','A','M','E','O','V','E','R')
+            for x in gameOver:
+                print(x)
+                sleep(0.2)
+            exit(None)
 def main():
     game_board = twenty_forty_eight(1)
-    
     # Adds two numbers into the array in randomised spaces
+    
     for x in range(2):
         game_board.rand_insert()
     print(game_board)
 
     def on_press(key):
         if key == keyboard.Key.up:
-            i = 0
+            moves_taken = game_board.move(0)
         elif key == keyboard.Key.left:
-            i = -3
+            moves_taken = game_board.move(-3)
         elif key == keyboard.Key.down:
-            i = -2
+            moves_taken = game_board.move(-2)
         elif key == keyboard.Key.right:
-            i = -1
+            moves_taken = game_board.move(-1)
         elif key == keyboard.Key.esc:
             return False
         else:
             return
-        game_board.arr_transpose(abs(i))
-        moves_taken = game_board.move()
-        game_board.arr_transpose(i)
-        game_board.turn(moves_taken)
+        game_board.terminal_turn()
         
     with keyboard.Listener(on_press = on_press) as listener:
         listener.join()
