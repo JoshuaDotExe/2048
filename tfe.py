@@ -119,9 +119,9 @@ class twenty_forty_eight:
             self.board[randCoords[0]][randCoords[1]] = 2    # num inserted
     
     def avail_moves_check(self):
-        for row in range(4):
-            for col in range(4):
-                if self.board[row][col] == 0:
+        for row in self.board:
+            for col in row:
+                if col == 0:
                     return True
         for row in range(4):
             for col in range(3):
@@ -143,12 +143,6 @@ class twenty_forty_eight:
         if self.avail_moves_check() == False:
             print("Game Over")
        
-    def terminal_turn(self):
-        print(self)
-        for row in self.board:
-            for col in row:
-                if col == 0:
-                    return
                 
 
         
