@@ -34,11 +34,6 @@ class MainWindow:
         for boardRow in self.game.board:
             x = 0
             for boardCol in boardRow:
-                gameNumWid = tk.Label(self.frame, text=f'Game Num : {self.game.ID}')
-                gameNumWid.grid(row=0, column=0)
-                turnNumWid = tk.Label(self.frame, text=f'Turn Num : {self.game.turnNum}')
-                turnNumWid.grid(row=0, column=1)
-                
                 self.tiles.create_rectangle(30+x*32, 30+y*32, 60+x*32, 60+y*32, fill=self.game.colours[boardCol], width=0)
                 self.tiles.grid(row=1, column=0, columnspan=2)
                 self.tiles.create_text(45+x*32, 45+y*32, text=str(boardCol))
@@ -46,6 +41,10 @@ class MainWindow:
 
                 x += 1
             y += 1
+        gameNumWid = tk.Label(self.frame, text=f'Game Num : {self.game.ID}')
+        gameNumWid.grid(row=0, column=0)
+        turnNumWid = tk.Label(self.frame, text=f'Turn Num : {self.game.turnNum}')
+        turnNumWid.grid(row=0, column=1)
         
 if __name__ == "__main__":
     root = tk.Tk()

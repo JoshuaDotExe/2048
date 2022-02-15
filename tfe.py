@@ -120,6 +120,10 @@ class twenty_forty_eight:
     
     def avail_moves_check(self):
         for row in range(4):
+            for col in range(4):
+                if self.board[row][col] == 0:
+                    return True
+        for row in range(4):
             for col in range(3):
                 check_num = self.board[row][col]
                 if self.board[row][col+1] == check_num:
@@ -137,7 +141,7 @@ class twenty_forty_eight:
             self.rand_insert()
             self.turnNum += 1
         if self.avail_moves_check() == False:
-            exit(None)
+            print("Game Over")
        
     def terminal_turn(self):
         print(self)
